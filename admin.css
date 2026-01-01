@@ -191,6 +191,7 @@
     font-size: 1rem;
     transition: var(--admin-transition);
     background: var(--admin-light);
+    box-sizing: border-box; /* Important pour mobile */
 }
 
 .login-form input:focus {
@@ -501,47 +502,67 @@
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
 }
 
 .search-wrapper {
     position: relative;
     flex: 1;
-    min-width: 250px;
+    min-width: 200px; /* Réduit pour mobile */
+    max-width: 320px; /* Limite maximale */
 }
 
-/* Make search input shorter on desktop and reduce export button width */
+/* CORRECTION : Input de recherche plus petit */
 #search-input {
-    max-width: 380px;
+    width: 100%;
+    max-width: 300px; /* Réduit de 380px à 300px */
+    padding: 10px 12px 10px 40px; /* Padding réduit */
+    border: 2px solid var(--admin-border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: var(--admin-transition);
+    background: var(--admin-light);
+    box-sizing: border-box; /* Empêche le dépassement */
 }
 
-.export-btn {
-    min-width: 120px;
-    padding: 10px 14px;
-}
-
-/* Validate button styling */
-.validate-btn {
-    padding: 8px 12px;
-    background: rgba(0, 102, 204, 0.1);
-    color: var(--admin-primary);
-    border: 2px solid rgba(0, 102, 204, 0.12);
+/* CORRECTION : Bouton CSV plus petit */
+#export-btn, .export-btn {
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: #ffffff;
+    border: none;
+    padding: 10px 14px; /* Padding réduit */
     border-radius: 8px;
     cursor: pointer;
-    margin-right: 8px;
-    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(40,167,69,0.18);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    min-width: 100px; /* Largeur minimale réduite */
 }
 
-/* Validation button: white by default, turns green when validated */
+#export-btn:hover, .export-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(40,167,69,0.26);
+    filter: saturate(1.05);
+}
+
+#export-btn:active, .export-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* CORRECTION : Validation button */
 .validate-btn {
     background: #d70e0e;
     color: #eae0e0;
     border: 2px solid #ddd;
-    padding: 15px 12px;
+    padding: 8px 10px; /* Padding réduit */
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 700;
-    width: 150px;
+    font-weight: 600; /* Réduit de 700 à 600 */
+    width: 120px; /* Réduit de 150px à 120px */
     transition: background 0.18s ease, color 0.18s ease, transform 0.14s ease, box-shadow 0.18s ease;
+    font-size: 0.9rem; /* Taille de police réduite */
 }
 
 .validate-btn:hover {
@@ -553,6 +574,7 @@
     background: linear-gradient(135deg, #28a745, #218838);
     color: #ffffff;
     border-color: rgba(33,136,56,0.8);
+    width: 120px; /* Même largeur pour les deux états */
 }
 
 .validate-btn:hover {
@@ -561,7 +583,6 @@
 
 /* Row style when validated */
 .validated {
-    /* stronger dark green background when validated */
     background: linear-gradient(90deg, rgba(27,94,32,0.98), rgba(34,139,34,0.92));
 }
 
@@ -575,6 +596,7 @@
     display: flex;
     gap: 8px;
     align-items: center;
+    flex-wrap: wrap; /* Permet le retour à la ligne sur mobile */
 }
 
 /* Active appearance for validate button when validated */
@@ -586,21 +608,11 @@
 
 .search-icon {
     position: absolute;
-    left: 15px;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--admin-gray);
-    font-size: 1.2rem;
-}
-
-#search-input {
-    width: 100%;
-    padding: 12px 15px 12px 45px;
-    border: 2px solid var(--admin-border);
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: var(--admin-transition);
-    background: var(--admin-light);
+    font-size: 1.1rem;
 }
 
 #search-input:focus {
@@ -610,10 +622,9 @@
     box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
 }
 
-.export-btn,
 .refresh-btn {
     padding: 12px 24px;
-    background: linear-gradient(135deg, var(--admin-success), #218838);
+    background: linear-gradient(135deg, var(--admin-info), #138496);
     color: var(--admin-white);
     border: none;
     border-radius: 12px;
@@ -626,17 +637,8 @@
     white-space: nowrap;
 }
 
-.refresh-btn {
-    background: linear-gradient(135deg, var(--admin-info), #138496);
-}
-
-.export-btn:hover,
 .refresh-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
-}
-
-.refresh-btn:hover {
     box-shadow: 0 5px 20px rgba(23, 162, 184, 0.4);
 }
 
@@ -647,12 +649,14 @@
     overflow-x: auto;
     border-radius: 12px;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling sur mobile */
 }
 
 #registrations-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+    min-width: 600px; /* Largeur minimale pour éviter l'écrasement */
 }
 
 #registrations-table thead {
@@ -661,10 +665,10 @@
 }
 
 #registrations-table th {
-    padding: 1.2rem;
+    padding: 1rem; /* Réduit de 1.2rem */
     text-align: left;
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-weight: 600; /* Réduit de 700 */
+    font-size: 0.9rem; /* Réduit de 0.95rem */
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -679,9 +683,25 @@
 }
 
 #registrations-table td {
-    padding: 1.2rem;
+    padding: 1rem; /* Réduit de 1.2rem */
     border-bottom: 1px solid var(--admin-border);
-    font-size: 0.95rem;
+    font-size: 0.9rem; /* Réduit de 0.95rem */
+    max-width: 150px; /* Limite la largeur des cellules */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* CORRECTION : Ajustement spécifique pour la colonne Téléphone */
+#registrations-table td:nth-child(6) { /* 6ème colonne = Téléphone */
+    min-width: 120px;
+    max-width: 140px;
+}
+
+/* CORRECTION : Ajustement pour les boutons d'action */
+#registrations-table td:last-child {
+    min-width: 200px;
+    max-width: 220px;
 }
 
 #registrations-table tbody tr {
@@ -705,9 +725,9 @@
 
 .badge {
     display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    padding: 4px 8px; /* Réduit */
+    border-radius: 15px; /* Réduit de 20px */
+    font-size: 0.8rem; /* Réduit de 0.85rem */
     font-weight: 600;
     text-transform: capitalize;
 }
@@ -729,16 +749,16 @@
 
 .delete-btn,
 .view-btn {
-    padding: 8px 16px;
+    padding: 6px 12px; /* Réduit de 8px 16px */
     border: none;
-    border-radius: 8px;
+    border-radius: 6px; /* Réduit de 8px */
     cursor: pointer;
     transition: var(--admin-transition);
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Réduit de 0.9rem */
     font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px; /* Réduit de 6px */
 }
 
 .delete-btn {
@@ -796,10 +816,10 @@
 .modal-content {
     background: var(--admin-white);
     margin: 5% auto;
-    padding: 2.5rem;
-    border-radius: 20px;
+    padding: 2rem; /* Réduit de 2.5rem */
+    border-radius: 15px; /* Réduit de 20px */
     width: 90%;
-    max-width: 600px;
+    max-width: 500px; /* Réduit de 600px */
     box-shadow: var(--admin-shadow-lg);
     animation: slideInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -820,19 +840,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem; /* Réduit de 2rem */
     padding-bottom: 1rem;
     border-bottom: 2px solid var(--admin-border);
 }
 
 .modal-header h3 {
     color: var(--admin-primary);
-    font-size: 1.6rem;
+    font-size: 1.4rem; /* Réduit de 1.6rem */
     font-weight: 700;
 }
 
 .close-modal {
-    font-size: 2rem;
+    font-size: 1.8rem; /* Réduit de 2rem */
     color: var(--admin-gray);
     cursor: pointer;
     transition: var(--admin-transition);
@@ -845,12 +865,12 @@
 }
 
 .modal-body {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem; /* Réduit de 2rem */
 }
 
 .detail-row {
     display: flex;
-    padding: 1rem;
+    padding: 0.8rem; /* Réduit de 1rem */
     border-bottom: 1px solid var(--admin-border);
 }
 
@@ -861,98 +881,26 @@
 .detail-label {
     font-weight: 700;
     color: var(--admin-dark);
-    min-width: 150px;
+    min-width: 120px; /* Réduit de 150px */
+    font-size: 0.9rem;
 }
 
 .detail-value {
     color: var(--admin-gray);
+    font-size: 0.9rem;
 }
 
-/* ========================================
-   RESPONSIVE DESIGN
-======================================== */
-@media screen and (max-width: 992px) {
-    .admin-nav {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-    
-    .admin-nav-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .table-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .table-actions {
-        width: 100%;
-        flex-direction: column;
-    }
-    
-    .search-wrapper {
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .login-box {
-        padding: 2rem 1.5rem;
-    }
-    
-    .stats-overview {
-        grid-template-columns: 1fr;
-    }
-    
-    .table-container {
-        padding: 1.5rem;
-    }
-    
-    #registrations-table {
-        font-size: 0.85rem;
-    }
-    
-    #registrations-table th,
-    #registrations-table td {
-        padding: 0.8rem;
-    }
-    
-    .modal-content {
-        margin: 10% auto;
-        width: 95%;
-        padding: 1.5rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .login-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 2rem;
-    }
-    
-    .login-box h2 {
-        font-size: 1.5rem;
-    }
-    
-    .stat-box h3 {
-        font-size: 2.5rem;
-    }
-}
 /* ========================================
    PASSWORD TOGGLE - ENHANCED UI (UPDATED)
 ======================================== */
 
 .password-toggle {
     position: absolute;
-    right: 12px;
+    right: 10px; /* Réduit de 12px */
     top: 50%;
     transform: translateY(-50%);
-    width: 42px;
-    height: 42px;
+    width: 36px; /* Réduit de 42px */
+    height: 36px; /* Réduit de 42px */
     border-radius: 50%;
     background: rgba(0, 102, 204, 0.08);
     display: flex;
@@ -960,10 +908,10 @@
     justify-content: center;
     cursor: pointer;
     color: var(--admin-gray);
-    font-size: 1.2rem;
+    font-size: 1.1rem; /* Réduit de 1.2rem */
     transition: var(--admin-transition);
     border: 2px solid transparent;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Réduit de 8px */
 }
 
 /* Hover effect */
@@ -975,7 +923,7 @@
     );
     color: var(--admin-primary);
     transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Réduit de 12px */
 }
 
 /* Active (click) feedback */
@@ -987,7 +935,7 @@
 .password-toggle:focus-visible {
     outline: none;
     border-color: var(--admin-primary);
-    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2); /* Réduit de 4px */
 }
 
 /* When password is visible (JS toggle class) */
@@ -998,7 +946,7 @@
         var(--admin-secondary)
     );
     color: var(--admin-white);
-    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.5); /* Réduit de 6px 20px */
 }
 
 /* =======================
@@ -1006,12 +954,12 @@
 ========================= */
 .submit-button {
     width: 100%;
-    padding: 15px;
+    padding: 14px; /* Réduit de 15px */
     background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
     color: var(--admin-white);
     border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
+    border-radius: 10px; /* Réduit de 12px */
+    font-size: 1rem; /* Réduit de 1.1rem */
     font-weight: 700;
     cursor: pointer;
     transition: var(--admin-transition);
@@ -1044,58 +992,165 @@
 .submit-button:active {
     transform: translateY(0) scale(0.97);
 }
-#admin-password{
-     padding: 10px;
+
+#admin-password {
+    padding: 12px; /* Réduit de 14px */
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
 }
-.admin-password:focus{
-     outline: none;
+
+.admin-password:focus {
+    outline: none;
     border-color: #0066cc;
 }
 
 /* Change-password panel styles */
 .change-pass-panel {
     background: var(--admin-white);
-    padding: 1.25rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    margin: 1rem 0 2rem 0;
+    padding: 1rem 1.25rem; /* Réduit */
+    border-radius: 10px; /* Réduit de 12px */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06); /* Réduit */
+    margin: 1rem 0 1.5rem 0; /* Réduit */
 }
 
 .change-password-form .form-group label {
     font-weight: 600;
     margin-bottom: 0.4rem;
+    font-size: 0.9rem;
 }
 
 .change-password-form input {
     padding: 10px 12px;
     border-radius: 8px;
     border: 1px solid var(--admin-border);
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95rem;
 }
 
 #change-pass-msg.success { color: #155724; }
 #change-pass-msg.error { color: #dc3545; }
 
-/* Export CSV button - green */
-#export-btn, .export-btn {
-    background: linear-gradient(135deg, #28a745, #218838);
-    color: #ffffff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(40,167,69,0.18);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+/* ========================================
+   RESPONSIVE DESIGN - AMÉLIORATIONS MOBILE
+======================================== */
+
+/* Pour les écrans de tablette */
+@media screen and (max-width: 992px) {
+    .admin-nav {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1rem 1.5rem; /* Réduit */
+    }
+    
+    .admin-nav-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .table-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .search-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    #search-input {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .admin-content {
+        padding: 1.5rem; /* Réduit de 2rem */
+    }
+    
+    .table-container {
+        padding: 1.5rem; /* Réduit de 2.5rem */
+    }
 }
 
-#export-btn:hover, .export-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(40,167,69,0.26);
-    filter: saturate(1.05);
-}
-
-#export-btn:active, .export-btn:active {
-    transform: translateY(0) scale(0.98);
-}
+/* Pour les écrans de téléphone */
+@media screen and (max-width: 768px) {
+    .login-box {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+    
+    .stats-overview {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-box {
+        padding: 1.5rem; /* Réduit de 2rem */
+    }
+    
+    .stat-box h3 {
+        font-size: 2.5rem;
+    }
+    
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+    }
+    
+    .table-container {
+        padding: 1rem; /* Réduit de 1.5rem */
+        margin: 0 -1rem;
+        border-radius: 0;
+    }
+    
+    #registrations-table {
+        font-size: 0.85rem;
+        min-width: 500px; /* Réduit pour mobile */
+    }
+    
+    #registrations-table th,
+    #registrations-table td {
+        padding: 0.6rem; /* Réduit de 0.8rem */
+    }
+    
+    /* Ajustement spécifique mobile pour la colonne téléphone */
+    #registrations-table td:nth-child(6) {
+        min-width: 100px;
+        max-width: 120px;
+        font-size: 0.8rem;
+    }
+    
+    /* Ajustement mobile pour les boutons d'action */
+    #registrations-table td:last-child {
+        min-width: 180px;
+        max-width: 200px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .validate-btn {
+        width: 110px; /* Réduit pour mobile */
+        padding: 6px 8px;
+        font-size: 0.85rem;
+    }
+    
+    .delete-btn {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        width

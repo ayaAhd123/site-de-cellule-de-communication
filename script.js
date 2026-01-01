@@ -1,534 +1,475 @@
 // ========================================
-// NAVIGATION & MENU MOBILE
+// GLOBAL FIREBASE UTILITIES - CORRIGÉ
 // ========================================
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    // Toggle mobile menu
-    if (hamburger) {
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
+let database = null;
+let firebaseFunctions = null;
+let isFirebaseReady = false;
+
+// Initialiser Firebase une seule fois
+async function initFirebase() {
+    if (isFirebaseReady) {
+        console.log('Firebase déjà initialisé');
+        return true;
     }
     
-    // Close menu when clicking on a link
-    document.querySelectorAll('.nav-menu a').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        });
-    });
-    
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-        const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-            navbar.style.boxShadow = '0 5px 30px rgba(0, 0, 0, 0.15)';
-        } else {
-            navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+    try {
+        console.log('🔄 Initialisation de Firebase...');
+        
+        // Importer les modules Firebase
+        const { database: fbDatabase } = await import('./firebase-config.js');
+        const { 
+            ref, set, get, update, remove, onValue 
+        } = await import("https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js");
+        
+        // Stocker les références
+        database = fbDatabase;
+        firebaseFunctions = { ref, set, get, update, remove, onValue };
+        
+        if (!database) {
+            throw new Error('Database Firebase non disponible');
         }
-    });
-});
+        
+        console.log('✅ Firebase initialisé avec succès');
+        console.log('📦 Database:', database);
+        isFirebaseReady = true;
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Erreur d\'initialisation Firebase:', error);
+        return false;
+    }
+}
+
+// Vérifier que Firebase est prêt avant utilisation
+async function ensureFirebaseReady() {
+    if (!isFirebaseReady) {
+        return await initFirebase();
+    }
+    return true;
+}
 
 // ========================================
-// SCROLL ANIMATIONS
+// ADMIN PANEL - LOAD REGISTRATIONS - CORRIGÉ
 // ========================================
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+async function loadRegistrations() {
+    console.log('🔄 Chargement des inscriptions...');
+    
+    // Vérifier que Firebase est prêt
+    const firebaseReady = await ensureFirebaseReady();
+    if (!firebaseReady) {
+        console.error('❌ Firebase non disponible');
+        showError('Erreur de connexion à la base de données');
+        return;
+    }
+    
+    const tableBody = document.getElementById('table-body');
+    const totalRegistrations = document.getElementById('total-registrations');
+    const noDataMessage = document.getElementById('no-data-message');
+    
+    try {
+        // Créer la référence
+        const registrationsRef = firebaseFunctions.ref(database, 'registrations');
+        console.log('📝 Référence créée:', registrationsRef);
+        
+        // Récupérer les données
+        console.log('📥 Récupération des données...');
+        const snapshot = await firebaseFunctions.get(registrationsRef);
+        
+        if (!snapshot.exists()) {
+            console.log('ℹ️ Aucune donnée trouvée');
+            if (tableBody) tableBody.innerHTML = '';
+            if (totalRegistrations) totalRegistrations.textContent = '0';
+            if (noDataMessage) {
+                noDataMessage.style.display = 'block';
+                noDataMessage.textContent = 'Aucune inscription enregistrée.';
+            }
+            return;
+        }
+        
+        const registrations = snapshot.val();
+        const registrationsArray = Object.values(registrations);
+        
+        console.log(`📈 ${registrationsArray.length} inscriptions trouvées`);
+        
+        // Mettre à jour les statistiques
+        if (totalRegistrations) {
+            totalRegistrations.textContent = registrationsArray.length;
+        }
+        
+        // Vider le tableau
+        if (tableBody) {
+            tableBody.innerHTML = '';
+        }
+        
+        // Masquer le message "pas de données"
+        if (noDataMessage) {
+            noDataMessage.style.display = 'none';
+        }
+        
+        // Trier et afficher les données
+        registrationsArray
+            .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+            .forEach(reg => {
+                const row = document.createElement('tr');
+                
+                // S'assurer que tous les champs existent
+                const safeReg = {
+                    id: reg.id || 'N/A',
+                    date: reg.date || 'N/A',
+                    nom: reg.nom || 'N/A',
+                    prenom: reg.prenom || 'N/A',
+                    filiere: reg.filiere || 'N/A',
+                    annee: reg.annee || 'N/A',
+                    telephone: reg.telephone || 'N/A',
+                    email: reg.email || 'N/A',
+                    interet: reg.interet || 'N/A',
+                    validated: reg.validated || false
+                };
+                
+                row.innerHTML = `
+                    <td>${safeReg.date}</td>
+                    <td>${safeReg.nom}</td>
+                    <td>${safeReg.prenom}</td>
+                    <td>${safeReg.filiere}</td>
+                    <td>${safeReg.annee}</td>
+                    <td>${safeReg.telephone}</td>
+                    <td>${safeReg.email}</td>
+                    <td>${safeReg.interet}</td>
+                    <td>
+                        <button class="validate-btn ${safeReg.validated ? 'valid' : ''}" 
+                                onclick="validateRegistration('${safeReg.id}')">
+                            ${safeReg.validated ? 'Validé' : 'Non validé'}
+                        </button>
+                        <button class="delete-btn" onclick="deleteRegistration('${safeReg.id}')">
+                            🗑️ Supprimer
+                        </button>
+                    </td>
+                `;
+                
+                if (tableBody) {
+                    tableBody.appendChild(row);
+                }
+            });
+        
+        console.log('✅ Données chargées avec succès');
+        
+    } catch (error) {
+        console.error('❌ Erreur de chargement des inscriptions:', error);
+        showError('Erreur de chargement des données: ' + error.message);
+    }
+}
+
+// Fonction pour afficher les erreurs
+function showError(message) {
+    const noDataMessage = document.getElementById('no-data-message');
+    if (noDataMessage) {
+        noDataMessage.style.display = 'block';
+        noDataMessage.textContent = message;
+        noDataMessage.style.color = '#dc3545';
+    }
+    
+    const tableBody = document.getElementById('table-body');
+    if (tableBody) {
+        tableBody.innerHTML = '';
+    }
+    
+    const totalRegistrations = document.getElementById('total-registrations');
+    if (totalRegistrations) {
+        totalRegistrations.textContent = '0';
+    }
+}
+
+// ========================================
+// ADMIN PANEL - PASSWORD MANAGEMENT - CORRIGÉ
+// ========================================
+async function getAdminPassword() {
+    try {
+        const firebaseReady = await ensureFirebaseReady();
+        if (!firebaseReady) {
+            console.log('⚠️ Firebase non prêt, utilisation du mot de passe par défaut');
+            return 'cmc2024';
+        }
+        
+        const adminPasswordRef = firebaseFunctions.ref(database, 'adminPassword');
+        const snapshot = await firebaseFunctions.get(adminPasswordRef);
+        
+        if (snapshot.exists()) {
+            const password = snapshot.val();
+            console.log('🔑 Mot de passe admin récupéré');
+            return password;
+        } else {
+            console.log('ℹ️ Pas de mot de passe trouvé, utilisation du défaut');
+            return 'cmc2024';
+        }
+    } catch (error) {
+        console.error('❌ Erreur récupération mot de passe:', error);
+        return 'cmc2024';
+    }
+}
+
+async function setAdminPassword(newPass) {
+    try {
+        const firebaseReady = await ensureFirebaseReady();
+        if (!firebaseReady) {
+            throw new Error('Firebase non disponible');
+        }
+        
+        const adminPasswordRef = firebaseFunctions.ref(database, 'adminPassword');
+        await firebaseFunctions.set(adminPasswordRef, newPass);
+        console.log('✅ Mot de passe admin mis à jour');
+    } catch (error) {
+        console.error('❌ Erreur mise à jour mot de passe:', error);
+        throw error;
+    }
+}
+
+// ========================================
+// SETUP REAL-TIME LISTENER - CORRIGÉ
+// ========================================
+function setupRegistrationListener() {
+    if (!isFirebaseReady || !database) {
+        console.log('⚠️ Impossible de configurer l\'écouteur: Firebase non initialisé');
+        return;
+    }
+    
+    try {
+        console.log('👂 Configuration de l\'écouteur en temps réel...');
+        
+        const registrationsRef = firebaseFunctions.ref(database, 'registrations');
+        firebaseFunctions.onValue(registrationsRef, (snapshot) => {
+            console.log('🔄 Mise à jour en temps réel détectée');
+            loadRegistrations();
+        });
+        
+        console.log('✅ Écouteur en temps réel configuré');
+    } catch (error) {
+        console.error('❌ Erreur configuration écouteur:', error);
+    }
+}
+
+// ========================================
+// ADMIN PANEL - DELETE REGISTRATION - CORRIGÉ
+// ========================================
+window.deleteRegistration = async function(id) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette inscription ?')) {
+        return;
+    }
+    
+    try {
+        const firebaseReady = await ensureFirebaseReady();
+        if (!firebaseReady) {
+            alert('Erreur: Firebase non disponible');
+            return;
+        }
+        
+        const regRef = firebaseFunctions.ref(database, 'registrations/' + id);
+        await firebaseFunctions.remove(regRef);
+        
+        console.log(`✅ Inscription ${id} supprimée`);
+        // L'écouteur en temps réel mettra à jour automatiquement
+        
+    } catch (error) {
+        console.error('❌ Erreur suppression inscription:', error);
+        alert('Erreur lors de la suppression: ' + error.message);
+    }
 };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('active');
+// ========================================
+// ADMIN PANEL - VALIDATE REGISTRATION - CORRIGÉ
+// ========================================
+window.validateRegistration = async function(id) {
+    try {
+        const firebaseReady = await ensureFirebaseReady();
+        if (!firebaseReady) {
+            alert('Erreur: Firebase non disponible');
+            return;
         }
-    });
-}, observerOptions);
-
-// Observe all task cards, gallery items and stat cards
-document.addEventListener('DOMContentLoaded', () => {
-    const elements = document.querySelectorAll('.task-card, .gallery-item, .stat-card');
-    elements.forEach(el => {
-        el.classList.add('scroll-reveal');
-        observer.observe(el);
-    });
-});
+        
+        const regRef = firebaseFunctions.ref(database, 'registrations/' + id);
+        const snapshot = await firebaseFunctions.get(regRef);
+        
+        if (snapshot.exists()) {
+            const currentData = snapshot.val();
+            await firebaseFunctions.update(regRef, {
+                ...currentData,
+                validated: !currentData.validated
+            });
+            
+            console.log(`✅ Inscription ${id} ${!currentData.validated ? 'validée' : 'invalidée'}`);
+        } else {
+            alert('Inscription non trouvée');
+        }
+    } catch (error) {
+        console.error('❌ Erreur validation inscription:', error);
+        alert('Erreur lors de la validation: ' + error.message);
+    }
+};
 
 // ========================================
-// REGISTRATION FORM
+// REGISTRATION FORM - CORRIGÉ
 // ========================================
 const registrationForm = document.getElementById('registration-form');
 const successMessage = document.getElementById('success-message');
 
 if (registrationForm) {
-    registrationForm.addEventListener('submit', function(e) {
+    registrationForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // Get form data
-        const formData = {
-            id: Date.now(),
-            date: new Date().toLocaleDateString('fr-FR'),
-            nom: document.getElementById('nom').value,
-            prenom: document.getElementById('prenom').value,
-            filiere: document.getElementById('filiere').value,
-            annee: document.getElementById('annee').value,
-            telephone: document.getElementById('telephone').value,
-            email: document.getElementById('email').value,
+        console.log('📝 Soumission du formulaire...');
+        
+        try {
+            // Initialiser Firebase
+            const firebaseReady = await ensureFirebaseReady();
+            if (!firebaseReady) {
+                alert('Erreur de connexion à la base de données. Veuillez réessayer.');
+                return;
+            }
+            
+            // Récupérer les données du formulaire
+            const formData = {
+                id: Date.now().toString(),
+                date: new Date().toLocaleDateString('fr-FR'),
+                timestamp: Date.now(),
+                nom: document.getElementById('nom').value.trim(),
+                prenom: document.getElementById('prenom').value.trim(),
+                filiere: document.getElementById('filiere').value.trim(),
+                annee: document.getElementById('annee').value,
+                telephone: document.getElementById('telephone').value.trim(),
+                email: document.getElementById('email').value.trim(),
                 interet: document.getElementById('interet').value,
                 validated: false
-        };
-        
-        // Get existing registrations or initialize empty array
-        let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
-        
-        // Add new registration
-        registrations.push(formData);
-        
-        // Save to localStorage
-        localStorage.setItem('registrations', JSON.stringify(registrations));
-        
-        // Show success message
-        successMessage.style.display = 'block';
-        
-        // Reset form
-        registrationForm.reset();
-        
-        // Hide success message after 5 seconds
-        setTimeout(() => {
-            successMessage.style.display = 'none';
-        }, 5000);
-        
-        // Scroll to success message
-        successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+            
+            console.log('📦 Données à enregistrer:', formData);
+            
+            // Vérifier les champs requis
+            const requiredFields = ['nom', 'prenom', 'filiere', 'annee', 'telephone', 'email', 'interet'];
+            for (const field of requiredFields) {
+                if (!formData[field]) {
+                    alert(`Le champ ${field} est requis`);
+                    return;
+                }
+            }
+            
+            // Enregistrer dans Firebase
+            const regRef = firebaseFunctions.ref(database, 'registrations/' + formData.id);
+            await firebaseFunctions.set(regRef, formData);
+            
+            console.log('✅ Inscription enregistrée avec succès!');
+            
+            // Afficher le message de succès
+            if (successMessage) {
+                successMessage.style.display = 'block';
+                successMessage.textContent = '✅ Inscription enregistrée avec succès !';
+                successMessage.style.backgroundColor = '#d4edda';
+                successMessage.style.color = '#155724';
+                successMessage.style.padding = '15px';
+                successMessage.style.borderRadius = '5px';
+                successMessage.style.marginTop = '20px';
+                successMessage.style.textAlign = 'center';
+            }
+            
+            // Réinitialiser le formulaire
+            registrationForm.reset();
+            
+            // Masquer le message après 5 secondes
+            setTimeout(() => {
+                if (successMessage) {
+                    successMessage.style.display = 'none';
+                }
+            }, 5000);
+            
+        } catch (error) {
+            console.error('❌ Erreur lors de l\'enregistrement:', error);
+            alert('Erreur: ' + error.message);
+        }
     });
 }
 
 // ========================================
-// ADMIN PANEL - LOGIN (uses persisted admin password)
+// ADMIN PANEL - LOGIN - CORRIGÉ
 // ========================================
-function getAdminPassword() {
-    return localStorage.getItem('adminPassword') || 'cmc2024';
-}
-
-function setAdminPassword(newPass) {
-    localStorage.setItem('adminPassword', newPass);
-}
-
 const loginForm = document.getElementById('login-form');
 const loginSection = document.getElementById('login-section');
 const adminDashboard = document.getElementById('admin-dashboard');
 const loginError = document.getElementById('login-error');
 
 if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-
+        
         const password = document.getElementById('admin-password').value;
-
-        if (password === getAdminPassword()) {
-            loginSection.style.display = 'none';
-            adminDashboard.style.display = 'block';
-            loadRegistrations();
-            // clear previous error if any
-            if (loginError) {
-                loginError.textContent = '';
-                loginError.classList.remove('show');
-            }
-        } else {
-            loginError.textContent = '❌ Mot de passe incorrecte';
-            loginError.classList.add('show');
-        }
-    });
-}
-
-// ========================================
-// ADMIN PANEL - LOGOUT
-// ========================================
-const logoutBtn = document.getElementById('logout-btn');
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        loginSection.style.display = 'flex';
-        adminDashboard.style.display = 'none';
-        document.getElementById('admin-password').value = '';
-        loginError.textContent = '';
-    });
-}
-
-// ========================================
-// CHANGE PASSWORD UI & LOGIC
-// ========================================
-function initChangePasswordUI() {
-    const changeBtn = document.getElementById('change-pass-btn');
-    const panel = document.getElementById('change-password-panel');
-    const form = document.getElementById('change-password-form');
-    const cancelBtn = document.getElementById('cancel-change');
-    const msg = document.getElementById('change-pass-msg');
-
-    if (!changeBtn || !panel || !form || !msg) return;
-
-    changeBtn.addEventListener('click', () => {
-        panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
-        msg.textContent = '';
-        msg.className = '';
-    });
-
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            panel.style.display = 'none';
-            try { form.reset(); } catch (e) {}
-            msg.textContent = '';
-            msg.className = '';
-        });
-    }
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+        console.log('🔐 Tentative de connexion...');
+        
         try {
-            const current = (document.getElementById('current-pass').value || '').trim();
-            const npass = (document.getElementById('new-pass').value || '').trim();
-            const confirm = (document.getElementById('confirm-pass').value || '').trim();
-
-            msg.className = '';
-
-            if (current !== getAdminPassword()) {
-                msg.textContent = '❌ Mot de passe actuel incorrecte.';
-                msg.className = 'error';
-                return;
+            const adminPassword = await getAdminPassword();
+            
+            if (password === adminPassword) {
+                console.log('✅ Connexion réussie');
+                loginSection.style.display = 'none';
+                adminDashboard.style.display = 'block';
+                
+                // Initialiser Firebase si pas encore fait
+                await ensureFirebaseReady();
+                
+                // Charger les inscriptions
+                await loadRegistrations();
+                
+                // Configurer l'écouteur en temps réel
+                setupRegistrationListener();
+                
+                // Effacer les erreurs
+                if (loginError) {
+                    loginError.textContent = '';
+                    loginError.classList.remove('show');
+                }
+            } else {
+                console.log('❌ Mot de passe incorrect');
+                if (loginError) {
+                    loginError.textContent = '❌ Mot de passe incorrect';
+                    loginError.classList.add('show');
+                }
             }
-
-            if (npass.length < 4) {
-                msg.textContent = '❌ Le nouveau mot de passe doit contenir au moins 4 caractères.';
-                msg.className = 'error';
-                return;
+        } catch (error) {
+            console.error('❌ Erreur lors de la connexion:', error);
+            if (loginError) {
+                loginError.textContent = '❌ Erreur de connexion';
+                loginError.classList.add('show');
             }
+        }
+    });
+}
 
-            if (npass !== confirm) {
-                msg.textContent = '❌ La confirmation ne correspond pas.';
-                msg.className = 'error';
-                return;
+// ========================================
+// INITIALISATION AU CHARGEMENT
+// ========================================
+console.log('🚀 Script.js chargé');
+
+// Initialiser Firebase au chargement si sur page admin
+if (window.location.pathname.includes('admin.html')) {
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log('📄 Page admin chargée');
+        
+        // Initialiser Firebase en arrière-plan
+        setTimeout(async () => {
+            try {
+                const ready = await initFirebase();
+                console.log(ready ? '✅ Firebase prêt' : '❌ Firebase non initialisé');
+                
+                // Tester la connexion
+                if (ready) {
+                    const testRef = firebaseFunctions.ref(database, 'test');
+                    try {
+                        await firebaseFunctions.get(testRef);
+                        console.log('✅ Connexion Firebase testée avec succès');
+                    } catch (testError) {
+                        // C'est normal si le nœud n'existe pas
+                        console.log('ℹ️ Test Firebase:', testError.message);
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Erreur initialisation:', error);
             }
-
-            setAdminPassword(npass);
-            msg.textContent = '✅ Mot de passe mis à jour avec succès.';
-            msg.className = 'success';
-            form.reset();
-            setTimeout(() => {
-                panel.style.display = 'none';
-                msg.textContent = '';
-                msg.className = '';
-            }, 1800);
-        } catch (err) {
-            console.error('change password error', err);
-            msg.textContent = '❌ Une erreur est survenue.';
-            msg.className = 'error';
-        }
+        }, 1000);
     });
 }
-
-document.addEventListener('DOMContentLoaded', initChangePasswordUI);
-initChangePasswordUI();
-
-// --- Debug helpers and delegated handlers ---
-// Add delegated click handler to ensure toggle works even if elements
-// are not present when specific init runs.
-function debugLog(...args) {
-    try { console.log('[CMC DEBUG]', ...args); } catch (e) {}
-}
-
-document.addEventListener('click', function (e) {
-    const t = e.target;
-    if (!t) return;
-
-    // Toggle change password panel when clicking the button
-    if (t.id === 'change-pass-btn' || (t.closest && t.closest('#change-pass-btn'))) {
-        const panel = document.getElementById('change-password-panel');
-        const msg = document.getElementById('change-pass-msg');
-        debugLog('delegated click on change-pass-btn, panel=', !!panel);
-        if (panel) {
-            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
-        }
-        if (msg) { msg.textContent = ''; msg.className = ''; }
-    }
-
-    // Handle cancel button
-    if (t.id === 'cancel-change' || (t.closest && t.closest('#cancel-change'))) {
-        const panel = document.getElementById('change-password-panel');
-        const form = document.getElementById('change-password-form');
-        const msg = document.getElementById('change-pass-msg');
-        debugLog('delegated click on cancel-change');
-        if (panel) panel.style.display = 'none';
-        if (form) { try { form.reset(); } catch (err) {} }
-        if (msg) { msg.textContent = ''; msg.className = ''; }
-    }
-});
-
-// Delegated submit handler as a fallback
-document.addEventListener('submit', function (e) {
-    if (!e.target || e.target.id !== 'change-password-form') return;
-    debugLog('delegated submit for change-password-form');
-    e.preventDefault();
-
-    try {
-        const current = (document.getElementById('current-pass').value || '').trim();
-        const npass = (document.getElementById('new-pass').value || '').trim();
-        const confirm = (document.getElementById('confirm-pass').value || '').trim();
-        const msg = document.getElementById('change-pass-msg');
-        const panel = document.getElementById('change-password-panel');
-
-        if (msg) msg.className = '';
-
-        if (current !== getAdminPassword()) {
-            if (msg) { msg.textContent = '❌ Mot de passe actuel incorrecte.'; msg.className = 'error'; }
-            return;
-        }
-
-        if (npass.length < 4) {
-            if (msg) { msg.textContent = '❌ Le nouveau mot de passe doit contenir au moins 4 caractères.'; msg.className = 'error'; }
-            return;
-        }
-
-        if (npass !== confirm) {
-            if (msg) { msg.textContent = '❌ La confirmation ne correspond pas.'; msg.className = 'error'; }
-            return;
-        }
-
-        setAdminPassword(npass);
-        if (msg) { msg.textContent = '✅ Mot de passe mis à jour avec succès.'; msg.className = 'success'; }
-        try { e.target.reset(); } catch (err) {}
-        setTimeout(() => {
-            if (panel) panel.style.display = 'none';
-            if (msg) { msg.textContent = ''; msg.className = ''; }
-        }, 1800);
-    } catch (err) {
-        console.error('delegated change password error', err);
-        const msg = document.getElementById('change-pass-msg');
-        if (msg) { msg.textContent = '❌ Une erreur est survenue.'; msg.className = 'error'; }
-    }
-});
-
-// ========================================
-// PASSWORD VISIBILITY TOGGLES
-// ========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // toggle for login admin password (single toggle)
-    const adminToggle = document.getElementById('admin-pass-toggle');
-    const adminInput = document.getElementById('admin-password');
-
-    if (adminToggle && adminInput) {
-        adminToggle.addEventListener('click', () => {
-            const t = adminInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            adminInput.setAttribute('type', t);
-            adminToggle.classList.toggle('active');
-        });
-    }
-
-    // toggles for change-password inputs (using data-target)
-    document.querySelectorAll('.password-toggle[data-target]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            const input = document.getElementById(targetId);
-            if (!input) return;
-            const newType = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', newType);
-            btn.classList.toggle('active');
-        });
-    });
-});
-
-// ========================================
-// ADMIN PANEL - LOAD REGISTRATIONS
-// ========================================
-function loadRegistrations() {
-    const registrations = JSON.parse(localStorage.getItem('registrations')) || [];
-    const tableBody = document.getElementById('table-body');
-    const totalRegistrations = document.getElementById('total-registrations');
-    const noDataMessage = document.getElementById('no-data-message');
-    
-    // Update statistics
-    if (totalRegistrations) {
-        totalRegistrations.textContent = registrations.length;
-    }
-    
-    // Clear table
-    if (tableBody) {
-        tableBody.innerHTML = '';
-    }
-    
-    // Check if there are registrations
-    if (registrations.length === 0) {
-        if (noDataMessage) {
-            noDataMessage.style.display = 'block';
-        }
-        return;
-    } else {
-        if (noDataMessage) {
-            noDataMessage.style.display = 'none';
-        }
-    }
-    
-    // Populate table
-    registrations.reverse().forEach(reg => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${reg.date}</td>
-            <td>${reg.nom}</td>
-            <td>${reg.prenom}</td>
-            <td>${reg.filiere}</td>
-            <td>${reg.annee}</td>
-            <td>${reg.telephone}</td>
-            <td>${reg.email}</td>
-            <td>${reg.interet}</td>
-            <td>
-                <button class="validate-btn ${reg.validated ? 'valid' : ''}" onclick="validateRegistration(${reg.id})">
-                    ${reg.validated ? 'Valider' : 'non valider'}
-                </button>
-                <button class="delete-btn" onclick="deleteRegistration(${reg.id})">
-                    🗑️ Supprimer
-                </button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
-
-// ========================================
-// ADMIN PANEL - DELETE REGISTRATION
-// ========================================
-function deleteRegistration(id) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette inscription ?')) {
-        let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
-        registrations = registrations.filter(reg => reg.id !== id);
-        localStorage.setItem('registrations', JSON.stringify(registrations));
-        loadRegistrations();
-    }
-}
-
-// Toggle validation state for a registration and persist to localStorage
-function validateRegistration(id) {
-    let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
-    const idx = registrations.findIndex(r => r.id === id);
-    if (idx === -1) return;
-
-    // Toggle validated flag
-    registrations[idx].validated = !registrations[idx].validated;
-
-    // Persist and refresh table
-    localStorage.setItem('registrations', JSON.stringify(registrations));
-    loadRegistrations();
-}
-
-// Toggle validation state for a registration and persist to localStorage
-// (no validateRegistration in original)
-
-// ========================================
-// ADMIN PANEL - SEARCH
-// ========================================
-const searchInput = document.getElementById('search-input');
-if (searchInput) {
-    searchInput.addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const rows = document.querySelectorAll('#table-body tr');
-        
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        });
-    });
-}
-
-// ========================================
-// ADMIN PANEL - EXPORT CSV
-// ========================================
-const exportBtn = document.getElementById('export-btn');
-if (exportBtn) {
-    exportBtn.addEventListener('click', function() {
-        const registrations = JSON.parse(localStorage.getItem('registrations')) || [];
-        
-        if (registrations.length === 0) {
-            alert('Aucune donnée à exporter');
-            return;
-        }
-        
-        // Create CSV content
-        let csv = 'Date,Nom,Prénom,Filière,Année,Téléphone,Email,Intérêt\n';
-        
-        registrations.forEach(reg => {
-            csv += `${reg.date},${reg.nom},${reg.prenom},${reg.filiere},${reg.annee},${reg.telephone},${reg.email},${reg.interet}\n`;
-        });
-        
-        // Create download link
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        
-        link.setAttribute('href', url);
-        link.setAttribute('download', `inscriptions_cmc_${new Date().toISOString().split('T')[0]}.csv`);
-        link.style.visibility = 'hidden';
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    });
-}
-
-// ========================================
-// SMOOTH SCROLL FOR ALL LINKS
-// ========================================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// ========================================
-// PARALLAX EFFECT ON HERO
-// ========================================
-window.addEventListener('scroll', () => {
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        const scrolled = window.pageYOffset;
-        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-    }
-});
-
-// ========================================
-// ABOUT TITLE HIDE ON SCROLL (KEEP TEXT & IMAGE READABLE)
-// ========================================
-document.addEventListener('DOMContentLoaded', () => {
-    const about = document.getElementById('about');
-    const aboutTitle = document.querySelector('#about .section-title');
-
-    if (!about || !aboutTitle) return;
-
-    // Ensure initial visible state
-    aboutTitle.style.opacity = '1';
-    aboutTitle.style.transform = 'translateY(0)';
-
-    const onScroll = () => {
-        const rect = about.getBoundingClientRect();
-        // When the about section's top is near the top of viewport, hide the title
-        const triggerPoint = 120; // px from top where title will hide
-
-        if (rect.top <= triggerPoint && rect.bottom > triggerPoint) {
-            aboutTitle.style.opacity = '0';
-            aboutTitle.style.transform = 'translateY(-10px)';
-        } else {
-            aboutTitle.style.opacity = '1';
-            aboutTitle.style.transform = 'translateY(0)';
-        }
-    };
-
-    // run once and on scroll
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-});
