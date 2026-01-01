@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Club Communication CMC</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Login Section -->
+        <div id="login-section" class="login-section">
+            <div class="login-box">
+                <center>
+                <h2><pre>𝙰𝚌𝚌è𝚜 𝙰𝚍𝚖𝚒𝚗𝚒𝚜𝚝𝚛𝚊𝚝𝚎𝚞𝚛</pre></h2></center>
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <center>
+                        <label for="admin-password"><pre style="font-size: 20px;">𝐌𝐨𝐭 𝐝𝐞 𝐩𝐚𝐬𝐬𝐞:</pre></label>
+                        <div class="input-wrapper" style="display:inline-block; position:relative;">
+                            <input type="password" id="admin-password" placeholder="Entrez le mot de passe">
+                            <span id="admin-pass-toggle" class="password-toggle" title="Afficher/masquer le mot de passe">👁️</span>
+                        </div>
+                        </center>
+                    </div><br><br>
+                    <button type="submit" class="submit-button">Se connecter</button>
+                    <p id="login-error" class="error-message"></p>
+                </form>
+                <a href="index.html" class="back-link">← Retour au site</a>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="admin-dashboard" style="display: none;">
+            <nav class="admin-nav">
+                <h2> Tableau de Bord</h2>
+                <div>
+                    <a href="index.html" class="back-link">← Retour au site</a>
+                    <button id="change-pass-btn" class="back-link">🔒 Changer le mot de passe</button>
+                    <button id="logout-btn" class="logout-btn">Déconnexion</button>
+                </div>
+            </nav>
+
+            <!-- Change password panel -->
+            <div id="change-password-panel" style="display:none;" class="change-pass-panel container">
+                <h3>Changer le mot de passe</h3>
+                <form id="change-password-form" class="change-password-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="current-pass">Mot de passe actuel</label>
+                            <div style="position:relative;">
+                                <input type="password" id="current-pass" required>
+                                <span class="password-toggle" data-target="current-pass" title="Afficher/masquer">👁️</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-pass">Nouveau mot de passe</label>
+                            <div style="position:relative;">
+                                <input type="password" id="new-pass" required>
+                                <span class="password-toggle" data-target="new-pass" title="Afficher/masquer">👁️</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-pass">Confirmer le nouveau</label>
+                            <div style="position:relative;">
+                                <input type="password" id="confirm-pass" required>
+                                <span class="password-toggle" data-target="confirm-pass" title="Afficher/masquer">👁️</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:1rem;align-items:center;margin-top:1rem;">
+                        <button type="submit" class="submit-button">Enregistrer</button>
+                        <button type="button" id="cancel-change" class="back-link">Annuler</button>
+                        <p id="change-pass-msg" style="margin:0 0 0 1rem;font-weight:600;"></p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin-content">
+                <div class="stats-overview">
+                    <div class="stat-box">
+                        <h3 id="total-registrations">0</h3>
+                        <p>Inscriptions totales</p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h3>Liste des Inscriptions</h3>
+                    <div class="table-actions">
+                        <input type="text" id="search-input" placeholder="🔍 Rechercher...">
+                        <button id="export-btn" class="export-btn">📥 Exporter CSV</button>
+                    </div><br><br>
+                    <div class="table-wrapper">
+                        <table id="registrations-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Filière</th>
+                                    <th>Année</th>
+                                    <th>Téléphone</th>
+                                    <th>Email</th>
+                                    <th>Intérêt</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Données dynamiques -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="no-data-message" style="display: none; text-align: center; padding: 2rem; color: #666;">
+                        Aucune inscription enregistrée.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

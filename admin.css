@@ -1,0 +1,1101 @@
+/* ========================================
+   ADMIN & AUTHENTICATION - ADVANCED STYLES
+======================================== */
+
+/* Admin color variables (fallbacks) */
+:root {
+    --admin-primary: #0066cc; /* blue */
+    --admin-secondary: #ff6600; /* orange */
+    --admin-white: #ffffff;
+    --admin-dark: #1a1a1a;
+    --admin-gray: #6c757d;
+    --admin-light: #f8f9fa;
+    --admin-border: #e6e9ef;
+    --admin-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    --admin-transition: all 0.28s ease;
+    --admin-danger: #dc3545;
+}
+
+.validated {
+    /* keep for compatibility but do not change row appearance */
+    background: transparent;
+}
+
+/* Style for the final label shown after validation */
+.validated-label {
+    display: inline-block;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, rgba(46,125,50,0.98), rgba(27,94,32,0.95));
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+/* Ensure the action buttons sit on the same line and have spacing */
+#registrations-table td:last-child {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+/* LOGIN PAGE - white background with blue & orange animated bubbles */
+.login-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--admin-white); /* white background */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated background particles */
+.login-section::before,
+.login-section::after {
+    content: '';
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    opacity: 0.55; /* increased visibility */
+    animation: float 16s infinite ease-in-out; /* slightly faster */
+    pointer-events: none;
+}
+
+/* blue bubble (top-left) */
+.login-section::before {
+    background: radial-gradient(circle at 30% 30%, rgba(0,102,204,0.98) 0%, rgba(0,102,204,0.75) 45%, rgba(0,102,204,0.45) 100%);
+    top: -120px; /* move slightly more into view */
+    left: -120px;
+    animation-delay: 0s;
+    box-shadow: 0 60px 140px rgba(0,102,204,0.35);
+}
+
+/* orange bubble (bottom-right) */
+.login-section::after {
+    background: radial-gradient(circle at 70% 70%, rgba(255,102,0,0.98) 0%, rgba(255,102,0,0.75) 45%, rgba(255,102,0,0.45) 100%);
+    bottom: -120px; /* move slightly more into view */
+    right: -120px;
+    animation-delay: 5s;
+    box-shadow: 0 60px 140px rgba(255,102,0,0.28);
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50px, -50px) scale(1.1); }
+    66% { transform: translate(-50px, 50px) scale(0.9); }
+}
+
+.login-box {
+    background: var(--admin-white);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 450px;
+    animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 10;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--admin-primary), var(--admin-secondary));
+    border-radius: 20px 20px 0 0;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.login-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 15px 40px rgba(0, 102, 204, 0.5); }
+}
+
+.login-box h2 {
+    color: var(--admin-dark);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.login-subtitle {
+    color: var(--admin-gray);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+
+.login-form .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--admin-dark);
+    font-size: 0.95rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: var(--admin-gray);
+    transition: var(--admin-transition);
+}
+
+.login-form input {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    border: 2px solid var(--admin-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: var(--admin-transition);
+    background: var(--admin-light);
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: var(--admin-primary);
+    background: var(--admin-white);
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+}
+
+.login-form input:focus + .input-icon {
+    color: var(--admin-primary);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--admin-gray);
+    font-size: 1.2rem;
+    transition: var(--admin-transition);
+}
+
+.password-toggle:hover {
+    color: var(--admin-primary);
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    color: var(--admin-white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--admin-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.submit-button:hover::before {
+    left: 100%;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.4);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+.submit-button.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.submit-button .spinner {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: var(--admin-white);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+.submit-button.loading .spinner {
+    display: block;
+}
+
+.submit-button.loading .button-text {
+    display: none;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    background: #f8d7da;
+    color: var(--admin-danger);
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-top: 1rem;
+    border-left: 4px solid var(--admin-danger);
+    animation: shake 0.5s;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 1.5rem;
+    color: var(--admin-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--admin-transition);
+}
+
+.back-link:hover {
+    color: var(--admin-secondary);
+    gap: 12px;
+}
+
+/* ========================================
+   ADMIN DASHBOARD
+======================================== */
+.admin-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.admin-nav {
+    background: var(--admin-white);
+    padding: 1.5rem 2rem;
+    box-shadow: var(--admin-shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.admin-nav h2 {
+    color: var(--admin-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-nav-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: var(--admin-light);
+    border-radius: 25px;
+}
+
+.admin-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--admin-white);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.logout-btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--admin-danger), #c82333);
+    color: var(--admin-white);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: var(--admin-transition);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+}
+
+/* ========================================
+   ADMIN CONTENT
+======================================== */
+.admin-content {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-box {
+    background: var(--admin-white);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: var(--admin-shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: var(--admin-transition);
+}
+
+.stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--admin-primary), var(--admin-secondary));
+}
+
+.stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--admin-shadow-lg);
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+    color: var(--admin-white);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.3);
+}
+
+.stat-box h3 {
+    font-size: 3rem;
+    color: var(--admin-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.stat-box p {
+    color: var(--admin-gray);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* ========================================
+   TABLE CONTAINER
+======================================== */
+.table-container {
+    background: var(--admin-white);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--admin-shadow);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.table-header h3 {
+    color: var(--admin-primary);
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Make search input shorter on desktop and reduce export button width */
+#search-input {
+    max-width: 380px;
+}
+
+.export-btn {
+    min-width: 120px;
+    padding: 10px 14px;
+}
+
+/* Validate button styling */
+.validate-btn {
+    padding: 8px 12px;
+    background: rgba(0, 102, 204, 0.1);
+    color: var(--admin-primary);
+    border: 2px solid rgba(0, 102, 204, 0.12);
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 8px;
+    font-weight: 600;
+}
+
+/* Validation button: white by default, turns green when validated */
+.validate-btn {
+    background: #d70e0e;
+    color: #eae0e0;
+    border: 2px solid #ddd;
+    padding: 15px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    width: 150px;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.14s ease, box-shadow 0.18s ease;
+}
+
+.validate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.validate-btn.valid {
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: #ffffff;
+    border-color: rgba(33,136,56,0.8);
+}
+
+.validate-btn:hover {
+    background: linear-gradient(135deg, rgba(0,102,204,0.12), rgba(0,102,204,0.08));
+}
+
+/* Row style when validated */
+.validated {
+    /* stronger dark green background when validated */
+    background: linear-gradient(90deg, rgba(27,94,32,0.98), rgba(34,139,34,0.92));
+}
+
+/* Make text readable on green background */
+.validated td {
+    color: #ffffff;
+}
+
+/* Ensure the action buttons sit on the same line and have spacing */
+#registrations-table td:last-child {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Active appearance for validate button when validated */
+.validated .validate-btn {
+    background: linear-gradient(135deg, rgba(46,125,50,0.98), rgba(27,94,32,0.95));
+    color: #ffffff;
+    border-color: rgba(0,0,0,0.12);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--admin-gray);
+    font-size: 1.2rem;
+}
+
+#search-input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 2px solid var(--admin-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: var(--admin-transition);
+    background: var(--admin-light);
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--admin-primary);
+    background: var(--admin-white);
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+}
+
+.export-btn,
+.refresh-btn {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--admin-success), #218838);
+    color: var(--admin-white);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--admin-transition);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.refresh-btn {
+    background: linear-gradient(135deg, var(--admin-info), #138496);
+}
+
+.export-btn:hover,
+.refresh-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+}
+
+.refresh-btn:hover {
+    box-shadow: 0 5px 20px rgba(23, 162, 184, 0.4);
+}
+
+/* ========================================
+   TABLE STYLES
+======================================== */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+#registrations-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#registrations-table thead {
+    background: linear-gradient(135deg, var(--admin-primary), #0052a3);
+    color: var(--admin-white);
+}
+
+#registrations-table th {
+    padding: 1.2rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+#registrations-table th:first-child {
+    border-radius: 12px 0 0 0;
+}
+
+#registrations-table th:last-child {
+    border-radius: 0 12px 0 0;
+}
+
+#registrations-table td {
+    padding: 1.2rem;
+    border-bottom: 1px solid var(--admin-border);
+    font-size: 0.95rem;
+}
+
+#registrations-table tbody tr {
+    transition: var(--admin-transition);
+    background: var(--admin-white);
+}
+
+#registrations-table tbody tr:hover {
+    background: var(--admin-light);
+    transform: scale(1.01);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+#registrations-table tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 12px;
+}
+
+#registrations-table tbody tr:last-child td:last-child {
+    border-radius: 0 0 12px 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-primary {
+    background: rgba(0, 102, 204, 0.1);
+    color: var(--admin-primary);
+}
+
+.badge-success {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--admin-success);
+}
+
+.badge-warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: #d39e00;
+}
+
+.delete-btn,
+.view-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--admin-transition);
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.delete-btn {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--admin-danger);
+}
+
+.view-btn {
+    background: rgba(0, 102, 204, 0.1);
+    color: var(--admin-primary);
+    margin-right: 8px;
+}
+
+.delete-btn:hover {
+    background: var(--admin-danger);
+    color: var(--admin-white);
+    transform: scale(1.05);
+}
+
+.view-btn:hover {
+    background: var(--admin-primary);
+    color: var(--admin-white);
+    transform: scale(1.05);
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 3rem;
+    color: var(--admin-gray);
+    font-size: 1.2rem;
+}
+
+.no-data-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* ========================================
+   MODAL STYLES
+======================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background: var(--admin-white);
+    margin: 5% auto;
+    padding: 2.5rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: var(--admin-shadow-lg);
+    animation: slideInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--admin-border);
+}
+
+.modal-header h3 {
+    color: var(--admin-primary);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.close-modal {
+    font-size: 2rem;
+    color: var(--admin-gray);
+    cursor: pointer;
+    transition: var(--admin-transition);
+    line-height: 1;
+}
+
+.close-modal:hover {
+    color: var(--admin-danger);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    margin-bottom: 2rem;
+}
+
+.detail-row {
+    display: flex;
+    padding: 1rem;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 700;
+    color: var(--admin-dark);
+    min-width: 150px;
+}
+
+.detail-value {
+    color: var(--admin-gray);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+@media screen and (max-width: 992px) {
+    .admin-nav {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .admin-nav-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .table-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .search-wrapper {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .login-box {
+        padding: 2rem 1.5rem;
+    }
+    
+    .stats-overview {
+        grid-template-columns: 1fr;
+    }
+    
+    .table-container {
+        padding: 1.5rem;
+    }
+    
+    #registrations-table {
+        font-size: 0.85rem;
+    }
+    
+    #registrations-table th,
+    #registrations-table td {
+        padding: 0.8rem;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        padding: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .login-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+    
+    .login-box h2 {
+        font-size: 1.5rem;
+    }
+    
+    .stat-box h3 {
+        font-size: 2.5rem;
+    }
+}
+/* ========================================
+   PASSWORD TOGGLE - ENHANCED UI (UPDATED)
+======================================== */
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(0, 102, 204, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--admin-gray);
+    font-size: 1.2rem;
+    transition: var(--admin-transition);
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Hover effect */
+.password-toggle:hover {
+    background: linear-gradient(
+        135deg,
+        rgba(0, 102, 204, 0.15),
+        rgba(255, 102, 0, 0.15)
+    );
+    color: var(--admin-primary);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Active (click) feedback */
+.password-toggle:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+/* Focus (keyboard accessibility) */
+.password-toggle:focus-visible {
+    outline: none;
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.2);
+}
+
+/* When password is visible (JS toggle class) */
+.password-toggle.active {
+    background: linear-gradient(
+        135deg,
+        var(--admin-primary),
+        var(--admin-secondary)
+    );
+    color: var(--admin-white);
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.5);
+}
+
+/* =======================
+   LOGIN SUBMIT BUTTON UPDATE
+========================= */
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+    color: var(--admin-white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--admin-transition);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.3);
+}
+
+/* Hover animation */
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.submit-button:hover::before {
+    left: 100%;
+}
+
+.submit-button:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 30px rgba(0, 102, 204, 0.45);
+}
+
+.submit-button:active {
+    transform: translateY(0) scale(0.97);
+}
+#admin-password{
+     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.admin-password:focus{
+     outline: none;
+    border-color: #0066cc;
+}
+
+/* Change-password panel styles */
+.change-pass-panel {
+    background: var(--admin-white);
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    margin: 1rem 0 2rem 0;
+}
+
+.change-password-form .form-group label {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.change-password-form input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--admin-border);
+}
+
+#change-pass-msg.success { color: #155724; }
+#change-pass-msg.error { color: #dc3545; }
+
+/* Export CSV button - green */
+#export-btn, .export-btn {
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: #ffffff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(40,167,69,0.18);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+#export-btn:hover, .export-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(40,167,69,0.26);
+    filter: saturate(1.05);
+}
+
+#export-btn:active, .export-btn:active {
+    transform: translateY(0) scale(0.98);
+}
