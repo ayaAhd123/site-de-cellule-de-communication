@@ -1154,3 +1154,166 @@
     .modal-content {
         margin: 10% auto;
         width
+        }
+        /* ========================================
+   CHANGE PASSWORD PANEL - AJOUTEZ CES STYLES À LA FIN DU FICHIER
+======================================== */
+
+/* Le panneau doit être caché par défaut */
+.change-pass-panel {
+    display: none;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin: 1rem 2rem;
+    border: 1px solid #e0e0e0;
+    max-width: 500px;
+}
+
+/* Style pour le bouton de changement de mot de passe */
+#change-pass-btn {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+#change-pass-btn:hover {
+    background: linear-gradient(135deg, #357abd, #2a65a0);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+/* Style du formulaire de changement */
+.change-password-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.change-password-form .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .change-password-form .form-row {
+        flex-direction: row;
+    }
+}
+
+.change-password-form .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.change-password-form label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.change-password-form input {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.change-password-form input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Boutons du formulaire */
+.change-password-form > div:last-child {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.change-password-form .submit-button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: white;
+    flex: 1;
+    min-width: 120px;
+}
+
+.change-password-form .submit-button:hover {
+    background: linear-gradient(135deg, #218838, #1e7e34);
+}
+
+.change-password-form .back-link {
+    background: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    min-width: 100px;
+}
+
+.change-password-form .back-link:hover {
+    background: #5a6268;
+    color: white;
+}
+
+/* Messages de feedback */
+#change-pass-msg {
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-align: center;
+    flex-grow: 1;
+}
+
+#change-pass-msg.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+#change-pass-msg.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .change-pass-panel {
+        margin: 1rem;
+    }
+    
+    #change-pass-btn {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+}

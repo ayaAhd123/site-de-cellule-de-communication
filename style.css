@@ -222,11 +222,9 @@ body {
 ======================================== */
 .hero {
     height: 100vh;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    background-image: url('photo/WhatsApp Image 2025-12-25 at 21.05.19.jpeg');
+    background-image: url("photo/WhatsApp Image 2025-12-25 at 21.05.19.jpeg");
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -234,6 +232,7 @@ body {
     position: relative;
     color: var(--white);
 }
+
 
 .hero-overlay {
     position: absolute;
