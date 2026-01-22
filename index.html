@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club Communication CMC</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -16,10 +21,11 @@
             <ul class="nav-menu">
                 <li><a href="#home">Accueil</a></li>
                 <li><a href="#about">À Propos</a></li>
+                <li><a href="#team">Notre Équipe</a></li>
                 <li><a href="#tasks">Nos Tâches</a></li>
                 <li><a href="#gallery">Galerie</a></li>
                 <li><a href="#register">Inscription</a></li>
-                <li><a href="admin.html">login</a></li>
+
             </ul>
             <div class="hamburger">
                 <span></span>
@@ -33,9 +39,10 @@
     <section id="home" class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content fade-in">
-            <h1 class="hero-title slide-up"><pre>ᑕEᒪᒪᑌᒪE ᗪE ᑕOᗰᗰᑌᑎIᑕᗩTIOᑎ  ᑕᗰᑕ
+            <h1 class="hero-title slide-up">
+                <pre>ᑕEᒪᒪᑌᒪE ᗪE ᑕOᗰᗰᑌᑎIᑕᗩTIOᑎ  ᑕᗰᑕ
 </pre>
-</h1>
+            </h1>
             <p class="hero-subtitle slide-up delay-1">Créer • Communiquer • Connecter</p>
             <a href="#register" class="cta-button pop-in delay-2">Rejoignez-nous</a>
         </div>
@@ -48,24 +55,35 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        La <strong>cellule de Communication de la Cité des Métiers et des Compétences</strong> 
-                        est une équipe dynamique et créative dédiée à la promotion et à la valorisation 
+                        La <strong>cellule de Communication de la Cité des Métiers et des Compétences</strong>
+                        est une équipe dynamique et créative dédiée à la promotion et à la valorisation
                         de tous les projets, événements et initiatives de la CMC.
                     </p>
                     <p>
-                        Notre mission est d'assurer une communication professionnelle et impactante 
-                        à travers différents médias et supports, en mettant en lumière les réalisations 
+                        Notre mission est d'assurer une communication professionnelle et impactante
+                        à travers différents médias et supports, en mettant en lumière les réalisations
                         et les talents de notre institution.
                     </p>
                     <p class="highlight-text">
-                         Toutes nos actions sont directement liées aux projets, événements et tâches 
-                        confiés par la direction de la CMC, garantissant ainsi une communication 
+                        Toutes nos actions sont directement liées aux projets, événements et tâches
+                        confiés par la direction de la CMC, garantissant ainsi une communication
                         cohérente et alignée avec les objectifs institutionnels.
                     </p>
                 </div>
                 <div class="about-image">
                     <img src="photo/WhatsApp Image 2025-12-26 at 21.18.40.jpeg" alt="Équipe CMC">
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team section-padding">
+        <div class="container">
+            <h2 class="section-title">Notre Équipe</h2>
+            <div id="team-grid" class="team-grid">
+                <!-- Les membres seront chargés dynamiquement depuis Firebase -->
+                <div class="loading-message">Chargement des membres...</div>
             </div>
         </div>
     </section>
@@ -81,17 +99,18 @@
                     <p>Production et montage de contenus vidéo professionnels pour les événements et projets CMC</p>
                 </div>
                 <div class="task-card">
-                   <img src="photo/pngtree-vector-camera-icon-png-image_696326.png" style="width:90px;">
+                    <img src="photo/pngtree-vector-camera-icon-png-image_696326.png" style="width:90px;">
                     <h3>Photo & Retouche</h3>
                     <p>Couverture photographique et retouche d'images pour valoriser chaque moment</p>
                 </div>
                 <div class="task-card">
-                   <img src="photo/confetti-vector-icon-isolated-on-transparent-background-confetti-transparency-logo-concept-R1PBPW.png" style="width: 100px;">
+                    <img src="photo/confetti-vector-icon-isolated-on-transparent-background-confetti-transparency-logo-concept-R1PBPW.png"
+                        style="width: 100px;">
                     <h3>Organisation Événementielle</h3>
                     <p>Planification et coordination des événements institutionnels</p>
                 </div>
                 <div class="task-card">
-                  <img src="photo/redaction.png" style="width: 65px;">
+                    <img src="photo/redaction.png" style="width: 65px;">
                     <h3>Rédaction Multilingue</h3>
                     <p>Création de contenus en français, arabe et anglais</p>
                 </div>
@@ -101,7 +120,8 @@
                     <p>Conception graphique et production de supports imprimés</p>
                 </div>
                 <div class="task-card">
-<img src="photo/reseaux-sociaux.png" style="width: 90px;">                    <h3>Digital & Réseaux</h3>
+                    <img src="photo/reseaux-sociaux.png" style="width: 90px;">
+                    <h3>Digital & Réseaux</h3>
                     <p>Gestion des réseaux sociaux et stratégie digitale</p>
                 </div>
             </div>
@@ -185,7 +205,7 @@
                             <option value="">Sélectionner...</option>
                             <option value="1ère année">1ère année</option>
                             <option value="2ème année">2ème année</option>
-                          
+
                         </select>
                     </div>
                 </div>
@@ -217,22 +237,40 @@
                 ✅ Inscription enregistrée avec succès !
             </div>
             <div class="register-socials" style="margin-top:1rem; text-align:center;">
-                
-                <a href="https://www.instagram.com/cellule_cmc/" class="social-link register-social-link" target="_blank" rel="noopener noreferrer" style="margin-left:0.5rem; color:#ff6600; text-decoration:none;"><img src="photo/icons8-instagram (1).gif" alt="" style="width: 25px; height: 25px;"></a>
-                <a href="https://www.linkedin.com/company/cellule-de-communication-cmc-tta/" class="social-link register-social-link" target="_blank" rel="noopener noreferrer" style="margin-left:0.5rem; color:#ff6600; text-decoration:none;"><img src="photo/icons8-linkedin-2.gif" alt="" style="width: 25px; height: 25px;"></a>
+
+                <a href="https://www.instagram.com/cellule_cmc/" class="social-link register-social-link"
+                    target="_blank" rel="noopener noreferrer"
+                    style="margin-left:0.5rem; color:#ff6600; text-decoration:none;"><img
+                        src="photo/icons8-instagram (1).gif" alt="" style="width: 25px; height: 25px;"></a>
+                <a href="https://www.linkedin.com/company/cellule-de-communication-cmc-tta/"
+                    class="social-link register-social-link" target="_blank" rel="noopener noreferrer"
+                    style="margin-left:0.5rem; color:#ff6600; text-decoration:none;"><img
+                        src="photo/icons8-linkedin-2.gif" alt="" style="width: 25px; height: 25px;"></a>
             </div>
         </div>
     </section>
 
+    <!-- Video Modal -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-modal-content">
+            <span class="close-video-modal">&times;</span>
+            <video id="modal-video" controls>
+                <source src="" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture de vidéos.
+            </video>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Club de Communication CMC. Tous droits réservés.</p>
-           
+            <p>&copy; 2026 cellule de Communication CMC. Tous droits réservés.</p>
+
         </div>
     </footer>
 
     <!-- CHANGEMENT ICI : type="module" -->
     <script type="module" src="script.js"></script>
 </body>
+
 </html>

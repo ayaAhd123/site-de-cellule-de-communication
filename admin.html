@@ -1,31 +1,41 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Club Communication CMC</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
+    <!-- Cropper.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
+
 <body>
     <div class="admin-container">
         <!-- Login Section -->
         <div id="login-section" class="login-section">
             <div class="login-box">
                 <center>
-                <form id="login-form" class="login-form">
-                    <div class="form-group">
-                        <center>
-                        <label for="admin-password"><pre style="font-size: 20px;">𝐌𝐨𝐭 𝐝𝐞 𝐩𝐚𝐬𝐬𝐞:</pre></label>
-                        <div class="input-wrapper" style="display:inline-block; position:relative;">
-                            <input type="password" id="admin-password" placeholder="Entrez le mot de passe">
-                            <span id="admin-pass-toggle" class="password-toggle" title="Afficher/masquer le mot de passe">👁️</span>
-                        </div>
-                        </center>
-                    </div><br><br>
-                    <button type="submit" class="submit-button">Se connecter</button>
-                    <p id="login-error" class="error-message"></p>
-                </form>
-                <a href="index.html" class="back-link">← Retour au site</a>
+                    <form id="login-form" class="login-form">
+                        <div class="form-group">
+                            <center>
+                                <label for="admin-password">
+                                    <pre style="font-size: 20px;">𝐌𝐨𝐭 𝐝𝐞 𝐩𝐚𝐬𝐬𝐞:</pre>
+                                </label>
+                                <div class="input-wrapper" style="display:inline-block; position:relative;">
+                                    <input type="password" id="admin-password" placeholder="Entrez le mot de passe">
+                                    <span id="admin-pass-toggle" class="password-toggle"
+                                        title="Afficher/masquer le mot de passe">👁️</span>
+                                </div>
+                            </center>
+                        </div><br><br>
+                        <button type="submit" class="submit-button">Se connecter</button>
+                        <p id="login-error" class="error-message"></p>
+                    </form>
+                    <a href="index.html" class="back-link">← Retour au site</a>
             </div>
         </div>
 
@@ -49,7 +59,8 @@
                             <label for="current-pass">Mot de passe actuel</label>
                             <div style="position:relative;">
                                 <input type="password" id="current-pass" required>
-                                <span class="password-toggle" data-target="current-pass" title="Afficher/masquer">👁️</span>
+                                <span class="password-toggle" data-target="current-pass"
+                                    title="Afficher/masquer">👁️</span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -63,7 +74,8 @@
                             <label for="confirm-pass">Confirmer le nouveau</label>
                             <div style="position:relative;">
                                 <input type="password" id="confirm-pass" required>
-                                <span class="password-toggle" data-target="confirm-pass" title="Afficher/masquer">👁️</span>
+                                <span class="password-toggle" data-target="confirm-pass"
+                                    title="Afficher/masquer">👁️</span>
                             </div>
                         </div>
                     </div>
@@ -80,8 +92,142 @@
                         <h3 id="total-registrations">0</h3>
                         <p>Inscriptions totales</p>
                     </div>
+                    <div class="stat-box">
+                        <h3 id="total-events">0</h3>
+                        <p>Événements</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3 id="total-members">0</h3>
+                        <p>Membres</p>
+                    </div>
                 </div>
 
+                <!-- Gestion des Événements -->
+                <div class="management-section">
+                    <h3>📸 Gestion des Événements</h3>
+                    <form id="event-form" class="management-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="event-name">Nom de l'événement *</label>
+                                <input type="text" id="event-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-description">Description *</label>
+                                <textarea id="event-description" required rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="event-photo">Photo de l'événement *</label>
+                                <input type="file" id="event-photo" accept="image/*" required>
+                                <div id="event-photo-preview" class="file-preview"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="event-video">Vidéo (optionnelle)</label>
+                                <input type="file" id="event-video" accept="video/*">
+                                <div id="event-video-preview" class="file-preview"></div>
+                            </div>
+                        </div>
+                        <div id="event-upload-progress" class="upload-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p class="progress-text">Upload en cours...</p>
+                        </div>
+                        <button type="submit" class="submit-button">
+                            <span id="event-btn-text">➕ Ajouter l'événement</span>
+                        </button>
+                        <p id="event-message" class="form-message"></p>
+                    </form>
+
+                    <div class="table-container">
+                        <h4>Liste des Événements</h4>
+                        <div class="table-wrapper">
+                            <table id="events-table">
+                                <thead>
+                                    <tr>
+                                        <th>Photo</th>
+                                        <th>Nom</th>
+                                        <th>Description</th>
+                                        <th>Vidéo</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="events-table-body">
+                                    <!-- Données dynamiques -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <p id="no-events-message"
+                            style="display: none; text-align: center; padding: 1rem; color: #666;">
+                            Aucun événement enregistré.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Gestion des Membres -->
+                <div class="management-section">
+                    <h3>👥 Gestion des Membres</h3>
+                    <form id="member-form" class="management-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="member-name">Nom complet *</label>
+                                <input type="text" id="member-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="member-role">Rôle dans la cellule *</label>
+                                <input type="text" id="member-role" required placeholder="Ex: Responsable Vidéo">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="member-description">Description *</label>
+                                <textarea id="member-description" required rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="member-photo">Photo *</label>
+                                <input type="file" id="member-photo" accept="image/*" required>
+                                <div id="member-photo-preview" class="file-preview"></div>
+                            </div>
+                        </div>
+                        <div id="member-upload-progress" class="upload-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p class="progress-text">Upload en cours...</p>
+                        </div>
+                        <button type="submit" class="submit-button">
+                            <span id="member-btn-text">➕ Ajouter le membre</span>
+                        </button>
+                        <p id="member-message" class="form-message"></p>
+                    </form>
+
+                    <div class="table-container">
+                        <h4>Liste des Membres</h4>
+                        <div class="table-wrapper">
+                            <table id="members-table">
+                                <thead>
+                                    <tr>
+                                        <th>Photo</th>
+                                        <th>Nom</th>
+                                        <th>Rôle</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="members-table-body">
+                                    <!-- Données dynamiques -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <p id="no-members-message"
+                            style="display: none; text-align: center; padding: 1rem; color: #666;">
+                            Aucun membre enregistré.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Gestion des Inscriptions -->
                 <div class="table-container">
                     <h3>Liste des Inscriptions</h3>
                     <div class="table-actions">
@@ -113,9 +259,106 @@
                     </p>
                 </div>
             </div>
+
+            <!-- Modal pour modifier un événement -->
+            <div id="edit-event-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" data-modal="edit-event-modal">&times;</span>
+                    <h3>Modifier l'événement</h3>
+                    <form id="edit-event-form">
+                        <input type="hidden" id="edit-event-id">
+                        <div class="form-group">
+                            <label for="edit-event-name">Nom de l'événement *</label>
+                            <input type="text" id="edit-event-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-event-description">Description *</label>
+                            <textarea id="edit-event-description" required rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-event-photo">Nouvelle photo (laisser vide pour garder l'actuelle)</label>
+                            <input type="file" id="edit-event-photo" accept="image/*">
+                            <div id="edit-event-photo-preview" class="file-preview"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-event-video">Nouvelle vidéo (laisser vide pour garder l'actuelle)</label>
+                            <input type="file" id="edit-event-video" accept="video/*">
+                            <div id="edit-event-video-preview" class="file-preview"></div>
+                        </div>
+                        <div id="edit-event-progress" class="upload-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p class="progress-text">Mise à jour en cours...</p>
+                        </div>
+                        <button type="submit" class="submit-button">💾 Enregistrer</button>
+                        <p id="edit-event-message" class="form-message"></p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal pour modifier un membre -->
+            <div id="edit-member-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" data-modal="edit-member-modal">&times;</span>
+                    <h3>Modifier le membre</h3>
+                    <form id="edit-member-form">
+                        <input type="hidden" id="edit-member-id">
+                        <div class="form-group">
+                            <label for="edit-member-name">Nom complet *</label>
+                            <input type="text" id="edit-member-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-member-role">Rôle *</label>
+                            <input type="text" id="edit-member-role" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-member-description">Description *</label>
+                            <textarea id="edit-member-description" required rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-member-photo">Nouvelle photo (laisser vide pour garder l'actuelle)</label>
+                            <input type="file" id="edit-member-photo" accept="image/*">
+                            <div id="edit-member-photo-preview" class="file-preview"></div>
+                        </div>
+                        <div id="edit-member-progress" class="upload-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p class="progress-text">Mise à jour en cours...</p>
+                        </div>
+                        <button type="submit" class="submit-button">💾 Enregistrer</button>
+                        <p id="edit-member-message" class="form-message"></p>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Modal de Recadrage (Cropper) -->
+    <div id="cropper-modal" class="modal">
+        <div class="modal-content cropper-modal-content">
+            <span class="close-modal" data-modal="cropper-modal">&times;</span>
+            <h3 id="cropper-title">Recadrer l'image</h3>
+            <div class="cropper-container">
+                <img id="cropper-image" src="" alt="Image à recadrer">
+            </div>
+            <div class="cropper-actions">
+                <button type="button" class="back-link" id="cropper-cancel">Annuler</button>
+                <div class="cropper-tools">
+                    <button type="button" class="tool-btn" id="rotate-left" title="Pivoter à gauche">↺</button>
+                    <button type="button" class="tool-btn" id="rotate-right" title="Pivoter à droite">↻</button>
+                    <button type="button" class="tool-btn" id="zoom-in" title="Zoomer">+</button>
+                    <button type="button" class="tool-btn" id="zoom-out" title="Dézoomer">−</button>
+                </div>
+                <button type="button" class="submit-button" id="cropper-save">Valider le recadrage</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cropper.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
