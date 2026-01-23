@@ -499,6 +499,33 @@ body {
     gap: 2rem;
 }
 
+.click-info {
+    color: #0066cc;
+    /* Blue */
+    text-decoration: underline;
+    text-decoration-color: #ff6600;
+    /* Orange */
+    text-align: center;
+    margin-top: -2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    animation: jumping 1.5s infinite ease-in-out;
+    display: block;
+}
+
+@keyframes jumping {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
 .gallery-item {
     position: relative;
     overflow: hidden;
